@@ -1,28 +1,28 @@
 package view;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sun.net.httpserver.Filter;
+import com.sun.net.httpserver.HttpHandler;
 
 import service.SessionService;
 import service.UserService;
-import view.handler.AuthenticationHandler;
-import view.handler.HomeHandler;
-import view.handler.LoginHandler;
-import view.handler.LogoutHandler;
-import view.handler.Page1Handler;
-import view.handler.Page2Handler;
-import view.handler.Page3Handler;
-import view.handler.UserResourceHandler;
 
 public class SimpleHttpServerBuilder {
+    private static HashMap<String, HttpHandler> handlers;
+    private static HashMap<String, Filter> filters;
     private int port;
     private UserService userService;
-
     private SessionService sessionService;
 
     private SimpleHttpServerBuilder() {
     }
 
     public static SimpleHttpServerBuilder aSimpleHttpServer() {
+        handlers = new HashMap<>();
+        filters = new HashMap<>();
         return new SimpleHttpServerBuilder();
     }
 
@@ -41,8 +41,27 @@ public class SimpleHttpServerBuilder {
         return this;
     }
 
+    public SimpleHttpServerBuilder withHandler(String path, HttpHandler httpHandler) {
+        handlers.put(path, httpHandler);
+        return this;
+    }
+
+    public SimpleHttpServerBuilder withFilter(String path, Filter filter) {
+        filters.put(path, filter);
+        return this;
+    }
+
     public SimpleHttpServer build() throws IOException {
         SimpleHttpServer simpleHttpServer = new SimpleHttpServer(port, sessionService, userService);
+
+        for (Map.Entry entry : handlers.entrySet()) {
+            String path = (String) entry.getKey();
+            HttpHandler httpHandler = (HttpHandler) entry.getValue();
+            Filter filter = filters.get(path);
+            simpleHttpServer.createPathContext(path, httpHandler, filter);
+        }
+
+
         return simpleHttpServer;
     }
 }

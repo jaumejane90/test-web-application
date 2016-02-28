@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.BasicAuthenticator;
+import com.sun.net.httpserver.Filter;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import service.SessionService;
@@ -13,7 +15,6 @@ import service.UserService;
 import view.filter.ParameterFilter;
 import view.filter.SessionFilter;
 import view.handler.AuthenticationHandler;
-import view.handler.HomeHandler;
 import view.handler.LoginHandler;
 import view.handler.LogoutHandler;
 import view.handler.Page1Handler;
@@ -42,8 +43,6 @@ public class SimpleHttpServer {
 
         createLoginContext();
 
-        createHomeContext(sessionService);
-
         createAuthenticateContext(sessionService);
 
         createLogoutContext(sessionService);
@@ -59,13 +58,13 @@ public class SimpleHttpServer {
         server.start();
     }
 
-    private void createLoginContext() {
-        server.createContext(LOGIN_PATH, new LoginHandler());
+    public void createPathContext(String path, HttpHandler httpHandler, Filter filter) {
+        HttpContext context = server.createContext(path, httpHandler);
+        context.getFilters().add(filter);
     }
 
-    private void createHomeContext(SessionService sessionService) {
-        HttpContext home = server.createContext(HOME_PATH, new HomeHandler());
-        home.getFilters().add(new SessionFilter(sessionService));
+    private void createLoginContext() {
+        server.createContext(LOGIN_PATH, new LoginHandler());
     }
 
     private void createLogoutContext(SessionService sessionService) {
