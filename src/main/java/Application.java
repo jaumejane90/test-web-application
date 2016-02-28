@@ -13,6 +13,12 @@ public class Application {
     public static final int PORT = 8080;
 
     public static void main(String[] args) throws IOException {
+        UserRepository userRepository = new UserRepositoryInMemory();
+        SessionService sessionService = new GuavaCacheSessionService();
+        UserService userService = new UserServiceImpl(userRepository);
+        SimpleHttpServer simpleHttpServer = new SimpleHttpServer(PORT, sessionService, userService);
+        simpleHttpServer.start();
+        System.out.println("Server listening on port " + PORT);
     }
 
 
