@@ -1,3 +1,4 @@
+import com.jaume.Application
 import spock.lang.Specification
 
 class ApplicationTest extends Specification {

@@ -26,7 +26,7 @@ def languageLevel = 1.8
 jar {
     manifest {
         attributes(
-                'Main-Class': 'Application'
+                'Main-Class': 'com.jaume.Application'
         )
     }
     from {
