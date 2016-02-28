@@ -15,7 +15,6 @@ import service.UserService;
 import view.filter.ParameterFilter;
 import view.filter.SessionFilter;
 import view.handler.AuthenticationHandler;
-import view.handler.LoginHandler;
 import view.handler.LogoutHandler;
 import view.handler.Page1Handler;
 import view.handler.Page2Handler;
@@ -41,8 +40,6 @@ public class SimpleHttpServer {
 
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
-        createLoginContext();
-
         createAuthenticateContext(sessionService);
 
         createLogoutContext(sessionService);
@@ -58,13 +55,13 @@ public class SimpleHttpServer {
         server.start();
     }
 
+    public void createPathContext(String path, HttpHandler httpHandler) {
+        server.createContext(path, httpHandler);
+    }
+
     public void createPathContext(String path, HttpHandler httpHandler, Filter filter) {
         HttpContext context = server.createContext(path, httpHandler);
         context.getFilters().add(filter);
-    }
-
-    private void createLoginContext() {
-        server.createContext(LOGIN_PATH, new LoginHandler());
     }
 
     private void createLogoutContext(SessionService sessionService) {

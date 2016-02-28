@@ -59,7 +59,11 @@ public class SimpleHttpServerBuilder {
             String path = (String) entry.getKey();
             HttpHandler httpHandler = (HttpHandler) entry.getValue();
             Filter filter = filters.get(path);
-            simpleHttpServer.createPathContext(path, httpHandler, filter);
+            if (filter == null) {
+                simpleHttpServer.createPathContext(path, httpHandler);
+            } else {
+                simpleHttpServer.createPathContext(path, httpHandler, filter);
+            }
         }
 
 

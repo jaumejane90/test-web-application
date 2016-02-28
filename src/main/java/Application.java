@@ -11,6 +11,7 @@ import view.SimpleHttpServer;
 import view.SimpleHttpServerBuilder;
 import view.filter.SessionFilter;
 import view.handler.HomeHandler;
+import view.handler.LoginHandler;
 
 public class Application {
 
@@ -26,6 +27,7 @@ public class Application {
                 .withPort(serverPort)
                 .withSessionService(sessionService)
                 .withUserService(userService)
+                .withHandler(SimpleHttpServer.LOGIN_PATH, new LoginHandler())
                 .withHandlerAndFilter(SimpleHttpServer.HOME_PATH, new HomeHandler(), new SessionFilter(sessionService))
                 .build();
 
