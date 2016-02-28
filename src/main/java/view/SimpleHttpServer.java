@@ -13,11 +13,7 @@ import com.sun.net.httpserver.HttpServer;
 import service.SessionService;
 import service.UserService;
 import view.filter.ParameterFilter;
-import view.filter.SessionFilter;
 import view.handler.AuthenticationHandler;
-import view.handler.Page1Handler;
-import view.handler.Page2Handler;
-import view.handler.Page3Handler;
 import view.handler.UserResourceHandler;
 
 public class SimpleHttpServer {
@@ -40,8 +36,6 @@ public class SimpleHttpServer {
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
         createAuthenticateContext(sessionService);
-
-        createPrivatePagesContext(sessionService);
 
         createUserResourceContext();
 
@@ -76,15 +70,6 @@ public class SimpleHttpServer {
                 return result;
             }
         });
-    }
-
-    private void createPrivatePagesContext(SessionService sessionService) {
-        HttpContext page1 = server.createContext(PAGE_1_PATH, new Page1Handler(userService));
-        page1.getFilters().add(new SessionFilter(sessionService));
-        HttpContext page2 = server.createContext(PAGE_2_PATH, new Page2Handler(userService));
-        page2.getFilters().add(new SessionFilter(sessionService));
-        HttpContext page3 = server.createContext(PAGE_3_PATH, new Page3Handler(userService));
-        page3.getFilters().add(new SessionFilter(sessionService));
     }
 
     private void createUserResourceContext() {

@@ -13,6 +13,9 @@ import view.filter.SessionFilter;
 import view.handler.HomeHandler;
 import view.handler.LoginHandler;
 import view.handler.LogoutHandler;
+import view.handler.Page1Handler;
+import view.handler.Page2Handler;
+import view.handler.Page3Handler;
 
 public class Application {
 
@@ -31,6 +34,9 @@ public class Application {
                 .withHandler(SimpleHttpServer.LOGIN_PATH, new LoginHandler())
                 .withHandlerAndFilter(SimpleHttpServer.HOME_PATH, new HomeHandler(), new SessionFilter(sessionService))
                 .withHandlerAndFilter(SimpleHttpServer.LOGOUT_PATH, new LogoutHandler(sessionService), new SessionFilter(sessionService))
+                .withHandlerAndFilter(SimpleHttpServer.PAGE_1_PATH, new Page1Handler(userService), new SessionFilter(sessionService))
+                .withHandlerAndFilter(SimpleHttpServer.PAGE_2_PATH, new Page2Handler(userService), new SessionFilter(sessionService))
+                .withHandlerAndFilter(SimpleHttpServer.PAGE_3_PATH, new Page3Handler(userService), new SessionFilter(sessionService))
                 .build();
 
         simpleHttpServer.start();
