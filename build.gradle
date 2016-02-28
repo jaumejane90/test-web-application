@@ -1,0 +1,51 @@
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.google.guava:guava:19.0'
+    compile 'com.github.spullara.mustache.java:compiler:0.9.1'
+    compile 'org.apache.httpcomponents:httpclient:4.5.2'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.5'
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+
+    testRuntime 'cglib:cglib-nodep:3.1'
+    testRuntime 'org.objenesis:objenesis:1.2'
+}
+
+def languageLevel = 1.8
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'Application'
+        )
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+
+tasks.withType(Test) {
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+    }
+}
+
+sourceSets {
+    sourceCompatibility = languageLevel
+    targetCompatibility = languageLevel
+
+    main.java.srcDirs = ['src/main/java']
+    test.groovy.srcDirs = ['src/test/unit', 'src/test/integration', 'src/test/acceptance']
+}
