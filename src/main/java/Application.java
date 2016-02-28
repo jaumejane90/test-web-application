@@ -8,6 +8,7 @@ import service.impl.GuavaCacheSessionService;
 import service.impl.UserServiceImpl;
 import util.MainUtils;
 import view.SimpleHttpServer;
+import view.SimpleHttpServerBuilder;
 
 public class Application {
 
@@ -20,7 +21,13 @@ public class Application {
         SessionService sessionService = new GuavaCacheSessionService();
         UserService userService = new UserServiceImpl(userRepository);
 
-        SimpleHttpServer simpleHttpServer = new SimpleHttpServer(serverPort, sessionService, userService);
+        SimpleHttpServer simpleHttpServer = SimpleHttpServerBuilder
+                .aSimpleHttpServer()
+                .withPort(serverPort)
+                .withSessionService(sessionService)
+                .withUserService(userService)
+                .build();
+
         simpleHttpServer.start();
 
         System.out.println("Server listening on port " + serverPort);

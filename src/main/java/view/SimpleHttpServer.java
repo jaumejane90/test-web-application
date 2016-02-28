@@ -31,8 +31,8 @@ public class SimpleHttpServer {
     public static final String PAGE_2_PATH = "/page_2";
     public static final String PAGE_3_PATH = "/page_3";
     public static final String USER_PATH = "/user";
-    private HttpServer server;
 
+    private HttpServer server;
     private UserService userService;
 
     public SimpleHttpServer(int port, SessionService sessionService, UserService userService) throws IOException {
