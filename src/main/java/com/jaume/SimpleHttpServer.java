@@ -1,4 +1,4 @@
-package com.jaume.view;
+package com.jaume;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

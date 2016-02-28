@@ -1,3 +1,5 @@
+package com.jaume
+
 import okhttp3.*
 
 class RestUtils {

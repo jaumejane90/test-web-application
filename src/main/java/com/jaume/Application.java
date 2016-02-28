@@ -11,8 +11,6 @@ import com.jaume.service.UserService;
 import com.jaume.service.impl.GuavaCacheSessionService;
 import com.jaume.service.impl.UserServiceImpl;
 import com.jaume.util.MainUtils;
-import com.jaume.view.SimpleHttpServer;
-import com.jaume.view.SimpleHttpServerBuilder;
 import com.jaume.view.filter.ParameterFilter;
 import com.jaume.view.filter.SessionFilter;
 import com.jaume.view.handler.AuthenticationHandler;

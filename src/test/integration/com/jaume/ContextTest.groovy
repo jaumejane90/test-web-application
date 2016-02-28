@@ -1,4 +1,5 @@
-import com.jaume.Application
+package com.jaume
+
 import spock.lang.Specification
 
 class ContextTest extends Specification {
