@@ -27,14 +27,10 @@ public class SimpleHttpServer {
 
     private UserService userService;
 
-    public SimpleHttpServer(int port, SessionService sessionService, UserService userService) {
+    public SimpleHttpServer(int port, SessionService sessionService, UserService userService) throws IOException {
         this.userService = userService;
 
-        try {
-            server = HttpServer.create(new InetSocketAddress(port), 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        server = HttpServer.create(new InetSocketAddress(port), 0);
 
         createLoginContext();
 
@@ -42,7 +38,7 @@ public class SimpleHttpServer {
 
         createAuthenticateContext(sessionService);
 
-        creatLogoutContext(sessionService);
+        createLogoutContext(sessionService);
 
         createPrivatePagesContext(sessionService);
 
@@ -60,7 +56,7 @@ public class SimpleHttpServer {
         home.getFilters().add(new SessionFilter(sessionService));
     }
 
-    private void creatLogoutContext(SessionService sessionService) {
+    private void createLogoutContext(SessionService sessionService) {
         HttpContext logout = server.createContext("/logout", new LogoutHandler(sessionService));
         logout.getFilters().add(new SessionFilter(sessionService));
     }
