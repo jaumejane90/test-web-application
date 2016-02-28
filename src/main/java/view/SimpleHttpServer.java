@@ -3,17 +3,16 @@ package view;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.BasicAuthenticator;
 import com.sun.net.httpserver.Filter;
 import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import service.SessionService;
 import service.UserService;
 import view.filter.ParameterFilter;
-import view.handler.AuthenticationHandler;
 import view.handler.UserResourceHandler;
 
 public class SimpleHttpServer {
@@ -35,8 +34,6 @@ public class SimpleHttpServer {
 
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
-        createAuthenticateContext(sessionService);
-
         createUserResourceContext();
 
         server.setExecutor(null);
@@ -46,31 +43,17 @@ public class SimpleHttpServer {
         server.start();
     }
 
-    public void createPathContext(String path, HttpHandler httpHandler) {
-        server.createContext(path, httpHandler);
-    }
-
-    public void createPathContext(String path, HttpHandler httpHandler, Filter filter) {
+    public void createPathContext(String path, HttpHandler httpHandler, Filter filter, Authenticator authenticator, boolean authenticatedPath) {
         HttpContext context = server.createContext(path, httpHandler);
-        context.getFilters().add(filter);
+
+        if (filter != null) {
+            context.getFilters().add(filter);
+        }
+        if (authenticatedPath && authenticator != null) {
+            context.setAuthenticator(authenticator);
+        }
     }
 
-    private void createAuthenticateContext(SessionService sessionService) {
-        HttpContext auth = server.createContext(AUTHENTICATE_PATH, new AuthenticationHandler(sessionService));
-        auth.setAuthenticator(new BasicAuthenticator("") {
-            @Override
-            public boolean checkCredentials(String user, String pwd) {
-                return userService.authenticate(user, pwd);
-            }
-
-            @Override
-            public Result authenticate(HttpExchange var1) {
-                Result result = super.authenticate(var1);
-                var1.getResponseHeaders().remove("WWW-Authenticate");
-                return result;
-            }
-        });
-    }
 
     private void createUserResourceContext() {
         HttpContext user = server.createContext(USER_PATH, new UserResourceHandler(userService));

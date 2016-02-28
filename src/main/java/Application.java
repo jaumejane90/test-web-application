@@ -10,6 +10,7 @@ import util.MainUtils;
 import view.SimpleHttpServer;
 import view.SimpleHttpServerBuilder;
 import view.filter.SessionFilter;
+import view.handler.AuthenticationHandler;
 import view.handler.HomeHandler;
 import view.handler.LoginHandler;
 import view.handler.LogoutHandler;
@@ -31,12 +32,14 @@ public class Application {
                 .withPort(serverPort)
                 .withSessionService(sessionService)
                 .withUserService(userService)
+                .withAuthenticator()
                 .withHandler(SimpleHttpServer.LOGIN_PATH, new LoginHandler())
                 .withHandlerAndFilter(SimpleHttpServer.HOME_PATH, new HomeHandler(), new SessionFilter(sessionService))
                 .withHandlerAndFilter(SimpleHttpServer.LOGOUT_PATH, new LogoutHandler(sessionService), new SessionFilter(sessionService))
                 .withHandlerAndFilter(SimpleHttpServer.PAGE_1_PATH, new Page1Handler(userService), new SessionFilter(sessionService))
                 .withHandlerAndFilter(SimpleHttpServer.PAGE_2_PATH, new Page2Handler(userService), new SessionFilter(sessionService))
                 .withHandlerAndFilter(SimpleHttpServer.PAGE_3_PATH, new Page3Handler(userService), new SessionFilter(sessionService))
+                .withHandler(SimpleHttpServer.AUTHENTICATE_PATH, new AuthenticationHandler(sessionService), true)
                 .build();
 
         simpleHttpServer.start();
