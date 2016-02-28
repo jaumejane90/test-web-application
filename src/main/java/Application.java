@@ -26,8 +26,7 @@ public class Application {
                 .withPort(serverPort)
                 .withSessionService(sessionService)
                 .withUserService(userService)
-                .withHandler(SimpleHttpServer.HOME_PATH, new HomeHandler())
-                .withFilter(SimpleHttpServer.HOME_PATH, new SessionFilter(sessionService))
+                .withHandlerAndFilter(SimpleHttpServer.HOME_PATH, new HomeHandler(), new SessionFilter(sessionService))
                 .build();
 
         simpleHttpServer.start();

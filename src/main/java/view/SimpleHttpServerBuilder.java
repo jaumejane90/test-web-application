@@ -46,7 +46,8 @@ public class SimpleHttpServerBuilder {
         return this;
     }
 
-    public SimpleHttpServerBuilder withFilter(String path, Filter filter) {
+    public SimpleHttpServerBuilder withHandlerAndFilter(String path, HttpHandler httpHandler, Filter filter) {
+        handlers.put(path, httpHandler);
         filters.put(path, filter);
         return this;
     }
