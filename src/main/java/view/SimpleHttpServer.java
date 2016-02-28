@@ -23,6 +23,14 @@ import view.handler.UserResourceHandler;
 
 public class SimpleHttpServer {
 
+    public static final String LOGIN_PATH = "/login";
+    public static final String HOME_PATH = "/home";
+    public static final String LOGOUT_PATH = "/logout";
+    public static final String AUTHENTICATE_PATH = "/authenticate";
+    public static final String PAGE_1_PATH = "/page_1";
+    public static final String PAGE_2_PATH = "/page_2";
+    public static final String PAGE_3_PATH = "/page_3";
+    public static final String USER_PATH = "/user";
     private HttpServer server;
 
     private UserService userService;
@@ -47,22 +55,26 @@ public class SimpleHttpServer {
         server.setExecutor(null);
     }
 
+    public void start() {
+        server.start();
+    }
+
     private void createLoginContext() {
-        server.createContext("/login", new LoginHandler());
+        server.createContext(LOGIN_PATH, new LoginHandler());
     }
 
     private void createHomeContext(SessionService sessionService) {
-        HttpContext home = server.createContext("/home", new HomeHandler());
+        HttpContext home = server.createContext(HOME_PATH, new HomeHandler());
         home.getFilters().add(new SessionFilter(sessionService));
     }
 
     private void createLogoutContext(SessionService sessionService) {
-        HttpContext logout = server.createContext("/logout", new LogoutHandler(sessionService));
+        HttpContext logout = server.createContext(LOGOUT_PATH, new LogoutHandler(sessionService));
         logout.getFilters().add(new SessionFilter(sessionService));
     }
 
     private void createAuthenticateContext(SessionService sessionService) {
-        HttpContext auth = server.createContext("/authenticate", new AuthenticationHandler(sessionService));
+        HttpContext auth = server.createContext(AUTHENTICATE_PATH, new AuthenticationHandler(sessionService));
         auth.setAuthenticator(new BasicAuthenticator("") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
@@ -79,16 +91,16 @@ public class SimpleHttpServer {
     }
 
     private void createPrivatePagesContext(SessionService sessionService) {
-        HttpContext page1 = server.createContext("/page_1", new Page1Handler(userService));
+        HttpContext page1 = server.createContext(PAGE_1_PATH, new Page1Handler(userService));
         page1.getFilters().add(new SessionFilter(sessionService));
-        HttpContext page2 = server.createContext("/page_2", new Page2Handler(userService));
+        HttpContext page2 = server.createContext(PAGE_2_PATH, new Page2Handler(userService));
         page2.getFilters().add(new SessionFilter(sessionService));
-        HttpContext page3 = server.createContext("/page_3", new Page3Handler(userService));
+        HttpContext page3 = server.createContext(PAGE_3_PATH, new Page3Handler(userService));
         page3.getFilters().add(new SessionFilter(sessionService));
     }
 
     private void createUserResourceContext() {
-        HttpContext user = server.createContext("/user", new UserResourceHandler(userService));
+        HttpContext user = server.createContext(USER_PATH, new UserResourceHandler(userService));
         user.setAuthenticator(new BasicAuthenticator("") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
@@ -98,7 +110,4 @@ public class SimpleHttpServer {
         user.getFilters().add(new ParameterFilter());
     }
 
-    public void start() {
-        server.start();
-    }
 }
