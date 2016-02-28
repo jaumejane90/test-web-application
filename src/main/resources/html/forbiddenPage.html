@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript">
+        function logout() {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "http://localhost:8080/logout",
+                success: function(data) {
+                    window.location.href = "http://localhost:8080/login";
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert("Bad Logout")
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<b>You have not acces:  {{userName}} !</b>
+<br/>
+<button type="button" onclick="logout();">Logout</button>
+</body>
+</html>

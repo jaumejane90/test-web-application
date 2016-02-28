@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript">
+        function getParameterByName(name) {
+            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        }
+
+        function login() {
+            var form = document.forms[0];
+            var username = form.username.value;
+            var password = form.password.value;
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(username+':'+password));
+                },
+                url: "http://localhost:8080/authenticate",
+                success: function(data) {
+                    var sessionToken = data.sessionToken;
+                    document.cookie = "session= " + sessionToken + "; max-age=300; path=/";
+                    var inc = getParameterByName("inc");
+                    if(inc != null) {
+                        window.location.href = "http://localhost:8080"+inc;
+                    }else {
+                        window.location.href = "http://localhost:8080/home";
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert("Bad credentials")
+                }
+            });
+        }
+    </script>
+</head>
+<form>
+    <input id="username" type="text" name="username"><br>
+    <input type="password" name="password"><br>
+    <input type="button" value="Log In" onclick="login();">
+</form>
+</body>
+</html>
