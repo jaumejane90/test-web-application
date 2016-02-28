@@ -18,4 +18,19 @@ public interface HttpServer {
             String PARAMETERS_MAP = "parameters";
         }
     }
+
+    interface Authenticator {
+        String DEFAULT_MESSAGE = "";
+    }
+
+    interface Path {
+        String LOGIN_PATH = "/login";
+        String HOME_PATH = "/home";
+        String LOGOUT_PATH = "/logout";
+        String AUTHENTICATE_PATH = "/authenticate";
+        String PAGE_1_PATH = "/page_1";
+        String PAGE_2_PATH = "/page_2";
+        String PAGE_3_PATH = "/page_3";
+        String USER_PATH = "/user";
+    }
 }
