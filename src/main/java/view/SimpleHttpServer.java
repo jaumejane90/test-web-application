@@ -15,7 +15,6 @@ import service.UserService;
 import view.filter.ParameterFilter;
 import view.filter.SessionFilter;
 import view.handler.AuthenticationHandler;
-import view.handler.LogoutHandler;
 import view.handler.Page1Handler;
 import view.handler.Page2Handler;
 import view.handler.Page3Handler;
@@ -42,8 +41,6 @@ public class SimpleHttpServer {
 
         createAuthenticateContext(sessionService);
 
-        createLogoutContext(sessionService);
-
         createPrivatePagesContext(sessionService);
 
         createUserResourceContext();
@@ -62,11 +59,6 @@ public class SimpleHttpServer {
     public void createPathContext(String path, HttpHandler httpHandler, Filter filter) {
         HttpContext context = server.createContext(path, httpHandler);
         context.getFilters().add(filter);
-    }
-
-    private void createLogoutContext(SessionService sessionService) {
-        HttpContext logout = server.createContext(LOGOUT_PATH, new LogoutHandler(sessionService));
-        logout.getFilters().add(new SessionFilter(sessionService));
     }
 
     private void createAuthenticateContext(SessionService sessionService) {
