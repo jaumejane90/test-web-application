@@ -2,6 +2,6 @@ language: java
 jdk:
   - oraclejdk8
 before_script:
-  - echo "Travis CI ... "
+  - echo "Travis CI ..."
 script:
   gradle tes
